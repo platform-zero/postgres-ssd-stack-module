@@ -17,7 +17,7 @@ services:
       POSTGRES_AIRFLOW_PASSWORD: ${POSTGRES_AIRFLOW_PASSWORD}
       POSTGRES_TEST_RUNNER_PASSWORD: ${POSTGRES_TEST_RUNNER_PASSWORD}
     volumes:
-      - ${PG_SSD_ROOT}/postgres-ssd:/var/lib/postgresql/data
+      - postgres_ssd_data:/var/lib/postgresql/data
       - ./configs/postgres/ssd-entrypoint.sh:/ssd-entrypoint.sh:ro
       - ./configs/postgres/ssd-bootstrap-common.sh:/docker-entrypoint-initdb.d/00-ssd-bootstrap-common.sh:ro
       - ./configs/postgres/init-ssd-db.sh:/docker-entrypoint-initdb.d/01-init-ssd-db.sh:ro
