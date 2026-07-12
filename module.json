@@ -1,0 +1,48 @@
+{
+  "configuration": {
+    "schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    }
+  },
+  "id": "postgres-ssd",
+  "overlays": [
+    "stack.compose/postgres-ssd.yml",
+    "stack.config/postgres/create-observer-views-ssd.sql",
+    "stack.config/postgres/ensure-ssd-users.sh",
+    "stack.config/postgres/init-ssd-db.sh",
+    "stack.config/postgres/ssd-bootstrap-common.sh",
+    "stack.config/postgres/ssd-entrypoint.sh"
+  ],
+  "provides": [
+    {
+      "capability": "module:postgres-ssd",
+      "version": "1"
+    }
+  ],
+  "requires": [
+    {
+      "capability": "module:stack-foundation",
+      "version": "1"
+    }
+  ],
+  "schemaVersion": 1,
+  "services": [
+    {
+      "name": "postgres-ssd",
+      "routes": [],
+      "volumes": []
+    },
+    {
+      "name": "postgres-ssd-bootstrap",
+      "routes": [],
+      "volumes": []
+    }
+  ],
+  "verification": {
+    "commands": [
+      "test -f stack.module.json && test -f module.json"
+    ]
+  }
+}
