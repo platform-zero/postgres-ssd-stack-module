@@ -21,7 +21,8 @@
     "stack.config/postgres/ensure-ssd-users.sh",
     "stack.config/postgres/init-ssd-db.sh",
     "stack.config/postgres/ssd-bootstrap-common.sh",
-    "stack.config/postgres/ssd-entrypoint.sh"
+    "stack.config/postgres/ssd-entrypoint.sh",
+    "stack.runtime.yaml"
   ],
   "testAssets": []
 }

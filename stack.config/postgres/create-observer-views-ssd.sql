@@ -2,7 +2,7 @@
 -- Creates read-only views for agent_observer that expose only public/metadata.
 --
 -- Note: Run this after Forgejo and Mastodon have initialized their schemas:
---   docker exec -i postgres-ssd psql -U <admin> -d <database> < create-observer-views-ssd.sql
+--   podman exec -i postgres-ssd psql -U <admin> -d <database> < create-observer-views-ssd.sql
 
 -- =============================================================================
 -- FORGEJO DATABASE - Public repository metadata only
