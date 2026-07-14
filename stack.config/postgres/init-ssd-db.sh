@@ -12,6 +12,7 @@ psql -v ON_ERROR_STOP=1 --host "$POSTGRES_HOST" --port "$POSTGRES_PORT" --userna
     DROP EXTENSION IF EXISTS timescaledb CASCADE;
 EOSQL
 
+# shellcheck source=/dev/null
 . /docker-entrypoint-initdb.d/00-ssd-bootstrap-common.sh
 bootstrap_postgres_ssd
 echo "postgres-ssd databases initialized successfully"

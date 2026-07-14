@@ -6,7 +6,7 @@
 - Lifecycle: `active`
 
 ## Owned overlays
-- `stack.compose/postgres-ssd.yml`
+- `stack.runtime.yaml`
 - `stack.config/postgres`
 
 ## Dependencies

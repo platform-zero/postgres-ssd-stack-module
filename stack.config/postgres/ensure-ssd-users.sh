@@ -10,6 +10,7 @@ until pg_isready --host "$POSTGRES_HOST" --port "$POSTGRES_PORT" --username "$PO
 done
 
 echo "[postgres-ssd-bootstrap] PostgreSQL is reachable; ensuring roles, databases, and shared tables..."
+# shellcheck source=/dev/null
 . /ensure-ssd-bootstrap-common.sh
 bootstrap_postgres_ssd
 echo "[postgres-ssd-bootstrap] postgres-ssd bootstrap verified"
