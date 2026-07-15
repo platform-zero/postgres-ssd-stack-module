@@ -22,52 +22,42 @@ psql_base=(
 )
 
 bootstrap_postgres_ssd() {
-  "${psql_base[@]}" --dbname "$POSTGRES_DB" <<-EOSQL
-    DO \$\$
-    BEGIN
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'agent_observer') THEN
-            CREATE USER agent_observer WITH PASSWORD \$pwd\$$POSTGRES_AGENT_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER agent_observer WITH PASSWORD \$pwd\$$POSTGRES_AGENT_PASSWORD\$pwd\$;
-        END IF;
+  "${psql_base[@]}" \
+    -v POSTGRES_AGENT_PASSWORD="$POSTGRES_AGENT_PASSWORD" \
+    -v POSTGRES_FORGEJO_PASSWORD="$POSTGRES_FORGEJO_PASSWORD" \
+    -v POSTGRES_OPENWEBUI_PASSWORD="$POSTGRES_OPENWEBUI_PASSWORD" \
+    -v POSTGRES_MASTODON_PASSWORD="$POSTGRES_MASTODON_PASSWORD" \
+    -v POSTGRES_PIPELINE_PASSWORD="$POSTGRES_PIPELINE_PASSWORD" \
+    -v POSTGRES_AIRFLOW_PASSWORD="$POSTGRES_AIRFLOW_PASSWORD" \
+    -v POSTGRES_TEST_RUNNER_PASSWORD="$POSTGRES_TEST_RUNNER_PASSWORD" \
+    --dbname "$POSTGRES_DB" <<-'EOSQL'
+    SELECT format('CREATE USER agent_observer WITH PASSWORD %L', :'POSTGRES_AGENT_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'agent_observer')\gexec
+    SELECT format('ALTER USER agent_observer WITH PASSWORD %L', :'POSTGRES_AGENT_PASSWORD')\gexec
 
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'forgejo') THEN
-            CREATE USER forgejo WITH PASSWORD \$pwd\$$POSTGRES_FORGEJO_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER forgejo WITH PASSWORD \$pwd\$$POSTGRES_FORGEJO_PASSWORD\$pwd\$;
-        END IF;
+    SELECT format('CREATE USER forgejo WITH PASSWORD %L', :'POSTGRES_FORGEJO_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'forgejo')\gexec
+    SELECT format('ALTER USER forgejo WITH PASSWORD %L', :'POSTGRES_FORGEJO_PASSWORD')\gexec
 
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'openwebui') THEN
-            CREATE USER openwebui WITH PASSWORD \$pwd\$$POSTGRES_OPENWEBUI_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER openwebui WITH PASSWORD \$pwd\$$POSTGRES_OPENWEBUI_PASSWORD\$pwd\$;
-        END IF;
+    SELECT format('CREATE USER openwebui WITH PASSWORD %L', :'POSTGRES_OPENWEBUI_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'openwebui')\gexec
+    SELECT format('ALTER USER openwebui WITH PASSWORD %L', :'POSTGRES_OPENWEBUI_PASSWORD')\gexec
 
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'mastodon') THEN
-            CREATE USER mastodon WITH PASSWORD \$pwd\$$POSTGRES_MASTODON_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER mastodon WITH PASSWORD \$pwd\$$POSTGRES_MASTODON_PASSWORD\$pwd\$;
-        END IF;
+    SELECT format('CREATE USER mastodon WITH PASSWORD %L', :'POSTGRES_MASTODON_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'mastodon')\gexec
+    SELECT format('ALTER USER mastodon WITH PASSWORD %L', :'POSTGRES_MASTODON_PASSWORD')\gexec
 
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'pipeline_user') THEN
-            CREATE USER pipeline_user WITH PASSWORD \$pwd\$$POSTGRES_PIPELINE_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER pipeline_user WITH PASSWORD \$pwd\$$POSTGRES_PIPELINE_PASSWORD\$pwd\$;
-        END IF;
+    SELECT format('CREATE USER pipeline_user WITH PASSWORD %L', :'POSTGRES_PIPELINE_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'pipeline_user')\gexec
+    SELECT format('ALTER USER pipeline_user WITH PASSWORD %L', :'POSTGRES_PIPELINE_PASSWORD')\gexec
 
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'airflow') THEN
-            CREATE USER airflow WITH PASSWORD \$pwd\$$POSTGRES_AIRFLOW_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER airflow WITH PASSWORD \$pwd\$$POSTGRES_AIRFLOW_PASSWORD\$pwd\$;
-        END IF;
+    SELECT format('CREATE USER airflow WITH PASSWORD %L', :'POSTGRES_AIRFLOW_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'airflow')\gexec
+    SELECT format('ALTER USER airflow WITH PASSWORD %L', :'POSTGRES_AIRFLOW_PASSWORD')\gexec
 
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'test_runner_user') THEN
-            CREATE USER test_runner_user WITH PASSWORD \$pwd\$$POSTGRES_TEST_RUNNER_PASSWORD\$pwd\$;
-        ELSE
-            ALTER USER test_runner_user WITH PASSWORD \$pwd\$$POSTGRES_TEST_RUNNER_PASSWORD\$pwd\$;
-        END IF;
-    END
-    \$\$;
+    SELECT format('CREATE USER test_runner_user WITH PASSWORD %L', :'POSTGRES_TEST_RUNNER_PASSWORD')
+    WHERE NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'test_runner_user')\gexec
+    SELECT format('ALTER USER test_runner_user WITH PASSWORD %L', :'POSTGRES_TEST_RUNNER_PASSWORD')\gexec
 
     SELECT 'CREATE DATABASE forgejo OWNER forgejo'
     WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'forgejo')\gexec
